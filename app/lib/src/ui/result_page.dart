@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../reading/reading.dart';
+import 'paper_background.dart';
 
 /// 卦例结果页：本卦概览与重点原文分区展示，附来源与取辞依据。
 class ResultPage extends StatelessWidget {
@@ -12,98 +13,112 @@ class ResultPage extends StatelessWidget {
   Widget build(BuildContext context) {
     const vermilion = Color(0xFFB3392E);
     return Scaffold(
-      body: Center(
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 640),
-          child: ListView(
-            padding: const EdgeInsets.all(32),
-            children: [
-              Text(
-                reading.question,
-                textAlign: TextAlign.center,
-                style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                '起卦时间：${_formatTime(reading.castAt)}',
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
-              ),
-              const SizedBox(height: 24),
-              _Section(
-                title: '卦象',
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('本卦：${reading.benGuaName}（第 ${reading.benGuaNumber} 卦）'),
-                    if (reading.changingPositions.isNotEmpty)
+      body: PaperBackground(
+        child: Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 640),
+            child: ListView(
+              padding: const EdgeInsets.all(32),
+              children: [
+                Text(
+                  reading.question,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  '起卦时间：${_formatTime(reading.castAt)}',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
+                ),
+                const SizedBox(height: 24),
+                _Section(
+                  title: '卦象',
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
                       Text(
-                        '变爻：第 ${reading.changingPositions.join('、')} 爻',
-                        style: const TextStyle(color: vermilion),
+                        '本卦：${reading.benGuaName}（第 ${reading.benGuaNumber} 卦）',
                       ),
-                    if (reading.bianGuaName != null)
-                      Text('变卦：${reading.bianGuaName}（第 ${reading.bianGuaNumber} 卦）'),
-                    if (reading.isSimplified)
-                      const Text(
-                        '三爻变：并读两卦卦辞，不判主次。此为明确标注的简化读法，非完整传统复原。',
-                        style: TextStyle(color: vermilion),
+                      if (reading.changingPositions.isNotEmpty)
+                        Text(
+                          '变爻：第 ${reading.changingPositions.join('、')} 爻',
+                          style: const TextStyle(color: vermilion),
+                        ),
+                      if (reading.bianGuaName != null)
+                        Text(
+                          '变卦：${reading.bianGuaName}（第 ${reading.bianGuaNumber} 卦）',
+                        ),
+                      if (reading.isSimplified)
+                        const Text(
+                          '三爻变：并读两卦卦辞，不判主次。此为明确标注的简化读法，非完整传统复原。',
+                          style: TextStyle(color: vermilion),
+                        ),
+                    ],
+                  ),
+                ),
+                _Section(
+                  title: '本卦概览',
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        reading.benGuaCi,
+                        style: const TextStyle(fontSize: 16),
                       ),
-                  ],
-                ),
-              ),
-              _Section(
-                title: '本卦概览',
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(reading.benGuaCi, style: const TextStyle(fontSize: 16)),
-                    if (reading.bianGuaCi != null) ...[
-                      const SizedBox(height: 8),
-                      Text('变卦（${reading.bianGuaName}）卦辞：${reading.bianGuaCi}',
-                          style: const TextStyle(fontSize: 14)),
+                      if (reading.bianGuaCi != null) ...[
+                        const SizedBox(height: 8),
+                        Text(
+                          '变卦（${reading.bianGuaName}）卦辞：${reading.bianGuaCi}',
+                          style: const TextStyle(fontSize: 14),
+                        ),
+                      ],
+                      const SizedBox(height: 4),
+                      Text(
+                        '概览供对照处境；本次重点阅读以下取辞条目。',
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.grey.shade600,
+                        ),
+                      ),
                     ],
-                    const SizedBox(height: 4),
-                    Text(
-                      '概览供对照处境；本次重点阅读以下取辞条目。',
-                      style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
-                    ),
-                  ],
+                  ),
                 ),
-              ),
-              _Section(
-                title: '取辞依据',
-                child: Text(reading.selectionBasis),
-              ),
-              _Section(
-                title: '重点原文',
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    for (final t in reading.selectedTexts) ...[
-                      _SelectedTextBlock(text: t),
-                      const SizedBox(height: 16),
+                _Section(title: '取辞依据', child: Text(reading.selectionBasis)),
+                _Section(
+                  title: '重点原文',
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      for (final t in reading.selectedTexts) ...[
+                        _SelectedTextBlock(text: t),
+                        const SizedBox(height: 16),
+                      ],
                     ],
-                  ],
+                  ),
                 ),
-              ),
-              _Section(
-                title: '来源',
-                child: Text(
-                  '${reading.sourceCitation}\n'
-                  '内容版本：${reading.contentVersion}\n'
-                  '${reading.castingMethod}\n'
-                  '${reading.rulesBasis}',
-                  style: TextStyle(fontSize: 12, color: Colors.grey.shade700),
+                _Section(
+                  title: '来源',
+                  child: Text(
+                    '${reading.sourceCitation}\n'
+                    '内容版本：${reading.contentVersion}\n'
+                    '${reading.castingMethod}\n'
+                    '${reading.rulesBasis}',
+                    style: TextStyle(fontSize: 12, color: Colors.grey.shade700),
+                  ),
                 ),
-              ),
-              const SizedBox(height: 24),
-              Center(
-                child: TextButton(
-                  onPressed: () => Navigator.of(context).pop(),
-                  child: const Text('返回，再次起卦'),
+                const SizedBox(height: 24),
+                Center(
+                  child: TextButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    child: const Text('返回，再次起卦'),
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -143,7 +158,10 @@ class _SelectedTextBlock extends StatelessWidget {
                   border: Border.all(color: vermilion),
                   borderRadius: BorderRadius.circular(4),
                 ),
-                child: const Text('主读', style: TextStyle(fontSize: 11, color: vermilion)),
+                child: const Text(
+                  '主读',
+                  style: TextStyle(fontSize: 11, color: vermilion),
+                ),
               ),
             ],
           ],

@@ -129,4 +129,33 @@ void main() {
     expect(find.text('第二问'), findsOneWidget);
     expect(find.textContaining('坤为地'), findsWidgets);
   });
+
+  testWidgets('不跳过动画播完得到同一结果', (tester) async {
+    await tester.pumpWidget(buildSubject([9, 7, 7, 7, 7, 7]));
+    await tester.pumpAndSettle();
+
+    await submit(tester, '同一个问题');
+    // 播完约三秒动画
+    await tester.pump(const Duration(seconds: 1));
+    await tester.pump(const Duration(seconds: 1));
+    await tester.pump(const Duration(seconds: 1));
+    await tester.pumpAndSettle();
+
+    expect(find.text('同一个问题'), findsOneWidget);
+    expect(find.textContaining('乾为天'), findsWidgets);
+  });
+
+  testWidgets('点击画面空白处跳过动画，与播完进入同一结果', (tester) async {
+    await tester.pumpWidget(buildSubject([9, 7, 7, 7, 7, 7]));
+    await tester.pumpAndSettle();
+
+    await submit(tester, '空白处跳过');
+    await tester.pump(const Duration(milliseconds: 500));
+
+    await tester.tapAt(const Offset(20, 20)); // 页面左上角空白处
+    await tester.pumpAndSettle();
+
+    expect(find.text('空白处跳过'), findsOneWidget);
+    expect(find.textContaining('初九'), findsWidgets);
+  });
 }
