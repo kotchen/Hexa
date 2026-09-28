@@ -85,11 +85,11 @@ void main() {
 
   group('业务入口：4096 穷举验证选中条目的解读覆盖', () {
     test('凡引用第 1–32 卦的选中经文均有白话与行动参考；'
-        '第 33 卦以后（姤卦辞任务 01 已批准样例除外）仍为 null', () {
+        '第 49 卦以后（姤卦辞任务 01 已批准样例除外）仍为 null', () {
       var coveredPrimary = 0; // 命中 1–32 卦的条目数（证明穷举确实覆盖）
       var coveredBen = 0; // 本卦引用命中
       var coveredBian = 0; // 变卦引用命中（跨本卦与变卦）
-      var unfinishedAfter32 = 0; // 33 卦以后保持未完成
+      var unfinishedAfter48 = 0; // 49 卦以后保持未完成
       for (var mask = 0; mask < 4096; mask++) {
         final lines = List.generate(6, (i) {
           final coin = (mask >> (i * 2)) & 3;
@@ -109,8 +109,8 @@ void main() {
             expect(t.actionReference, isNotNull, reason: t.label);
             expect(t.actionReference, contains('一般性行动参考'), reason: t.label);
             expect(t.actionReference, contains('确定预测'), reason: t.label);
-          } else {
-            unfinishedAfter32++;
+          } else if (n > 48) {
+            unfinishedAfter48++;
             if (t.label == '天风姤 · 卦辞') {
               // 任务 01 已批准的姤卦辞样例解读，属经批准的既有例外。
               expect(t.vernacular, isNotNull, reason: t.label);
@@ -126,18 +126,18 @@ void main() {
       expect(coveredPrimary, greaterThan(0));
       expect(coveredBen, greaterThan(0));
       expect(coveredBian, greaterThan(0));
-      expect(unfinishedAfter32, greaterThan(0));
+      expect(unfinishedAfter48, greaterThan(0));
     });
 
-    test('四变/五变取变卦爻辞的跨卦路径：损之遁取遁上九，遁为第 33 卦仍显示未完成', () {
-      final r = factoryFor([9, 9, 6, 6, 6, 7]).cast('问退出');
-      expect(r.changingPositions, [1, 2, 3, 4, 5]);
+    test('四变/五变取变卦爻辞的跨卦路径：损之革取革初九，革为第 49 卦仍显示未完成', () {
+      final r = factoryFor([7, 9, 6, 6, 6, 9]).cast('问变动');
+      expect(r.changingPositions, [2, 3, 4, 5, 6]);
       expect(r.benGuaName, '山泽损');
-      expect(r.bianGuaName, '天山遁');
+      expect(r.bianGuaName, '泽火革');
       final t = r.selectedTexts.single;
-      expect(t.label, '天山遁 · 上九');
-      expect(t.original, '上九：肥遯，无不利。');
-      // 遁在第 33 卦：不得冒充完成。
+      expect(t.label, '泽火革 · 初九');
+      expect(t.original, '初九：巩用黄牛之革。');
+      // 革在第 49 卦：不得冒充完成。
       expect(t.vernacular, isNull);
       expect(t.actionReference, isNull);
     });

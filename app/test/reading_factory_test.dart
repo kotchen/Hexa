@@ -116,8 +116,8 @@ void main() {
     });
 
     test('缺少白话解释的条目 vernacular 为 null，不冒充完整解读', () {
-      final r = factoryFor([8, 8, 7, 7, 7, 7]).cast('问隐退时机'); // 天山遁（第 33 卦），无变爻
-      expect(r.benGuaName, '天山遁');
+      final r = factoryFor([7, 8, 7, 7, 7, 8]).cast('问变革时机'); // 泽火革（第 49 卦），无变爻
+      expect(r.benGuaName, '泽火革');
       expect(r.selectedTexts.single.vernacular, isNull);
       expect(r.selectedTexts.single.actionReference, isNull);
     });
