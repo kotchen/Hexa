@@ -47,18 +47,23 @@ void main() {
       expect(ClassicLibrary.forName('坤为地').yong6, '利永贞。');
     });
 
-    test('白话解释仅已审校条目提供，缺省为 null（解读尚未完成）', () {
+    test('第 1–16 卦解读已提供，第 17 卦以后缺省为 null（解读尚未完成）', () {
       final qian = ClassicLibrary.forName('乾为天');
       expect(qian.guaCiVernacular, isNotNull);
-      expect(qian.yaoCiVernacular![0], isNotNull); // 初九已审校
-      expect(qian.yaoCiVernacular![1], isNull); // 九二尚未编写
+      expect(qian.yaoCiVernacular, isNotNull);
+      expect(qian.yong9Vernacular, isNotNull);
 
       final gou = ClassicLibrary.forName('天风姤');
       expect(gou.guaCiVernacular, isNotNull);
 
-      final xu = ClassicLibrary.forName('水天需');
-      expect(xu.guaCiVernacular, isNull);
-      expect(xu.yaoCiVernacular, isNull);
+      final sui = ClassicLibrary.forName('泽雷随'); // 第 17 卦
+      expect(sui.guaCiVernacular, isNull);
+      expect(sui.guaCiAction, isNull);
+      expect(sui.yaoCiVernacular, isNull);
+      expect(sui.yaoCiAction, isNull);
+
+      final gu = ClassicLibrary.forNumber(18); // 蛊
+      expect(gu.guaCiVernacular, isNull);
     });
 
     test('内容库提供出处与版本号', () {

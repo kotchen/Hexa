@@ -91,6 +91,8 @@ class ReadingFactory {
           label: entry.label,
           original: '$part：$original',
           isPrimary: entry.isPrimary,
+          vernacular: part == '用九' ? gua.yong9Vernacular : gua.yong6Vernacular,
+          actionReference: part == '用九' ? gua.yong9Action : gua.yong6Action,
         ));
       } else {
         final position = _positionOf(part);

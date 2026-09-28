@@ -35,7 +35,8 @@ void main() {
       expect(r.selectedTexts, hasLength(1));
       expect(r.selectedTexts.single.label, '乾为天 · 用九');
       expect(r.selectedTexts.single.original, '用九：见群龙无首，吉。');
-      expect(r.selectedTexts.single.vernacular, isNull); // 用九解读尚未完成
+      expect(r.selectedTexts.single.vernacular, isNotNull); // 用九解读已随任务 03 补齐
+      expect(r.selectedTexts.single.actionReference, contains('确定预测'));
     });
 
     test('全六：坤之乾，六爻皆变，取用六', () {
@@ -115,8 +116,8 @@ void main() {
     });
 
     test('缺少白话解释的条目 vernacular 为 null，不冒充完整解读', () {
-      final r = factoryFor([7, 7, 7, 8, 7, 8]).cast('问等待时机'); // 水天需，无变爻
-      expect(r.benGuaName, '水天需');
+      final r = factoryFor([7, 8, 8, 7, 7, 8]).cast('问等待时机'); // 泽雷随（第 17 卦），无变爻
+      expect(r.benGuaName, '泽雷随');
       expect(r.selectedTexts.single.vernacular, isNull);
       expect(r.selectedTexts.single.actionReference, isNull);
     });

@@ -82,7 +82,19 @@ void main() {
   });
 
   testWidgets('缺少白话解释的经文明确显示解读尚未完成', (tester) async {
-    await tester.pumpWidget(buildSubject([7, 7, 7, 8, 7, 8])); // 水天需，无变爻
+    await tester.pumpWidget(buildSubject([7, 8, 8, 7, 7, 8])); // 泽雷随（第 17 卦），无变爻
+    await tester.pumpAndSettle();
+
+    await submit(tester, '问等待时机');
+    await tester.tap(find.text('跳过'));
+    await tester.pumpAndSettle();
+
+    expect(find.textContaining('泽雷随'), findsWidgets);
+    expect(find.textContaining('解读尚未完成'), findsWidgets);
+  });
+
+  testWidgets('第 1–16 卦已完成条目显示白话解释与行动参考', (tester) async {
+    await tester.pumpWidget(buildSubject([7, 7, 7, 8, 7, 8])); // 水天需（第 5 卦），无变爻
     await tester.pumpAndSettle();
 
     await submit(tester, '问等待时机');
@@ -90,7 +102,10 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.textContaining('水天需'), findsWidgets);
-    expect(find.textContaining('解读尚未完成'), findsWidgets);
+    expect(find.textContaining('白话解释（应用编写）'), findsOneWidget);
+    expect(find.textContaining('行动参考（应用编写，非原文）'), findsOneWidget);
+    expect(find.textContaining('解读尚未完成'), findsNothing);
+    expect(find.textContaining('并非对未来的确定预测'), findsOneWidget);
   });
 
   testWidgets('三爻变明确标注简化读法', (tester) async {
