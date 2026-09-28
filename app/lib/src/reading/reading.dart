@@ -1,23 +1,24 @@
-/// 一次卦例阅读的结果。
+/// 一次卦例阅读的结果（由真实起卦生成）。
 class Reading {
   const Reading({
     required this.question,
     required this.castAt,
     required this.lines,
     required this.benGuaName,
-    required this.bianGuaName,
+    required this.benGuaNumber,
+    required this.benGuaCi,
     required this.changingPositions,
-    required this.selectedLabels,
+    required this.selectedTexts,
     required this.primaryLabel,
     required this.selectionBasis,
     required this.isSimplified,
-    required this.originalTexts,
     required this.sourceCitation,
-    required this.sourceLocation,
-    required this.vernacularText,
-    required this.actionReference,
-    required this.isDevSample,
-    required this.devBadgeLabel,
+    required this.contentVersion,
+    required this.castingMethod,
+    required this.rulesBasis,
+    this.bianGuaName,
+    this.bianGuaNumber,
+    this.bianGuaCi,
   });
 
   final String question;
@@ -25,36 +26,63 @@ class Reading {
 
   /// 六爻原始数值（6/7/8/9），自下而上。
   final List<int> lines;
-  final String benGuaName;
 
-  /// 无变爻时为 null。
+  /// 本卦（通行本卦序与卦辞概览）。
+  final String benGuaName;
+  final int benGuaNumber;
+  final String benGuaCi;
+
+  /// 变卦；无变爻时为 null。
   final String? bianGuaName;
+  final int? bianGuaNumber;
+  final String? bianGuaCi;
+
+  /// 变爻位置（1–6，自下而上）。
   final List<int> changingPositions;
 
-  /// 本次取辞选中的经文条目标签（如「乾为天 · 初九」）。
-  final List<String> selectedLabels;
+  /// 本次取辞选中的经文条目（原文与可选解读）。
+  final List<SelectedText> selectedTexts;
 
   /// 主读条目标签；三变简化读法无主次时为 null。
   final String? primaryLabel;
 
   /// 取辞依据说明，展示给用户。
   final String selectionBasis;
+
+  /// 三变简化读法时为 true，界面须明确标注。
   final bool isSimplified;
 
-  /// 选中的原文文字。
-  final List<String> originalTexts;
-
-  /// 出处（底本/版本）与定位。
+  /// 出处（底本/版本）与内容版本。
   final String sourceCitation;
-  final String sourceLocation;
+  final String contentVersion;
 
-  /// 应用原创白话解释。
-  final String vernacularText;
+  /// 起卦方法与取辞规则版本说明。
+  final String castingMethod;
+  final String rulesBasis;
+}
 
-  /// 应用编写的一般性行动参考，与原文、白话分开展示。
-  final String actionReference;
+/// 一条被选中的经文及其解读快照。
+class SelectedText {
+  const SelectedText({
+    required this.label,
+    required this.original,
+    this.isPrimary = false,
+    this.vernacular,
+    this.actionReference,
+  });
 
-  /// 开发样例标记：明确标注、不伪装成真实随机起卦。
-  final bool isDevSample;
-  final String devBadgeLabel;
+  /// 如「乾为天 · 初九」「乾为天 · 卦辞」「乾为天 · 用九」。
+  final String label;
+
+  /// 原文（含位名引领，如「初九：潜龙勿用。」）。
+  final String original;
+
+  /// 是否主读条目。
+  final bool isPrimary;
+
+  /// 应用原创白话解释；null = 解读尚未完成，界面须明示。
+  final String? vernacular;
+
+  /// 应用编写的一般行动参考；null = 尚未编写。
+  final String? actionReference;
 }

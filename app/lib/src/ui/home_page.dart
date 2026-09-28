@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 
-import '../reading/sample_reading.dart';
+import '../reading/reading_factory.dart';
 import 'cast_animation_page.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  const HomePage({super.key, required this.factory});
+
+  /// 起卦工厂：应用注入真实随机源，测试注入可控序列。
+  final ReadingFactory factory;
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -13,6 +16,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final _questionController = TextEditingController();
   String? _errorText;
+  var _submitting = false;
 
   @override
   void dispose() {
@@ -21,17 +25,25 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _submit() {
+    if (_submitting) return; // 提交期间阻止重复生成
     final question = _questionController.text.trim();
     if (question.isEmpty) {
       setState(() => _errorText = '请输入要起卦的问题');
       return;
     }
-    setState(() => _errorText = null);
-    // 任务 01 使用固定开发样例；起卦生成将在内容任务就位后接入 CastingEngine。
-    final reading = SampleReading.build(question);
-    Navigator.of(context).push(
-      MaterialPageRoute<void>(builder: (_) => CastAnimationPage(reading: reading)),
-    );
+    setState(() {
+      _errorText = null;
+      _submitting = true;
+    });
+    // 一次提交只生成一次卦例；动画仅展示，跳过不改变结果。
+    final reading = widget.factory.cast(question);
+    Navigator.of(context)
+        .push(
+          MaterialPageRoute<void>(builder: (_) => CastAnimationPage(reading: reading)),
+        )
+        .then((_) {
+      if (mounted) setState(() => _submitting = false);
+    });
   }
 
   @override
@@ -72,18 +84,12 @@ class _HomePageState extends State<HomePage> {
                 ),
                 const SizedBox(height: 24),
                 FilledButton(
-                  onPressed: _submit,
+                  onPressed: _submitting ? null : _submit,
                   style: FilledButton.styleFrom(
                     backgroundColor: const Color(0xFFB3392E),
                     padding: const EdgeInsets.symmetric(vertical: 16),
                   ),
                   child: const Text('起卦', style: TextStyle(fontSize: 18, letterSpacing: 4)),
-                ),
-                const SizedBox(height: 16),
-                Text(
-                  '开发阶段：当前结果页为固定开发样例，已明确标注，非真实随机起卦。',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
                 ),
               ],
             ),
