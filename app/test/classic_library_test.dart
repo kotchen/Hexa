@@ -47,23 +47,29 @@ void main() {
       expect(ClassicLibrary.forName('坤为地').yong6, '利永贞。');
     });
 
-    test('第 1–16 卦解读已提供，第 17 卦以后缺省为 null（解读尚未完成）', () {
+    test('第 1–32 卦解读已提供，第 33 卦以后缺省为 null（解读尚未完成）', () {
       final qian = ClassicLibrary.forName('乾为天');
       expect(qian.guaCiVernacular, isNotNull);
       expect(qian.yaoCiVernacular, isNotNull);
       expect(qian.yong9Vernacular, isNotNull);
 
       final gou = ClassicLibrary.forName('天风姤');
-      expect(gou.guaCiVernacular, isNotNull);
+      expect(gou.guaCiVernacular, isNotNull); // 任务 01 已批准样例
 
       final sui = ClassicLibrary.forName('泽雷随'); // 第 17 卦
-      expect(sui.guaCiVernacular, isNull);
-      expect(sui.guaCiAction, isNull);
-      expect(sui.yaoCiVernacular, isNull);
-      expect(sui.yaoCiAction, isNull);
+      expect(sui.guaCiVernacular, isNotNull);
+      expect(sui.guaCiAction, isNotNull);
+      expect(sui.yaoCiVernacular, isNotNull);
+      expect(sui.yaoCiAction, isNotNull);
 
-      final gu = ClassicLibrary.forNumber(18); // 蛊
-      expect(gu.guaCiVernacular, isNull);
+      final dun = ClassicLibrary.forNumber(33); // 遁
+      expect(dun.guaCiVernacular, isNull);
+      expect(dun.guaCiAction, isNull);
+      expect(dun.yaoCiVernacular, isNull);
+      expect(dun.yaoCiAction, isNull);
+
+      final zhuang = ClassicLibrary.forNumber(34); // 大壮
+      expect(zhuang.guaCiVernacular, isNull);
     });
 
     test('内容库提供出处与版本号', () {
