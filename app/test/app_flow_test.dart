@@ -82,7 +82,9 @@ void main() {
   });
 
   testWidgets('第 49–64 卦已完成条目显示白话解释与行动参考，不再有解读尚未完成', (tester) async {
-    await tester.pumpWidget(buildSubject([7, 8, 7, 7, 7, 8])); // 泽火革（第 49 卦），无变爻
+    await tester.pumpWidget(
+      buildSubject([7, 8, 7, 7, 7, 8]),
+    ); // 泽火革（第 49 卦），无变爻
     await tester.pumpAndSettle();
 
     await submit(tester, '问变革时机');
@@ -97,7 +99,9 @@ void main() {
   });
 
   testWidgets('第 33–48 卦已完成条目显示白话解释与行动参考', (tester) async {
-    await tester.pumpWidget(buildSubject([8, 8, 7, 7, 7, 7])); // 天山遁（第 33 卦），无变爻
+    await tester.pumpWidget(
+      buildSubject([8, 8, 7, 7, 7, 7]),
+    ); // 天山遁（第 33 卦），无变爻
     await tester.pumpAndSettle();
 
     await submit(tester, '问隐退时机');
@@ -112,7 +116,9 @@ void main() {
   });
 
   testWidgets('第 17–32 卦已完成条目显示白话解释与行动参考', (tester) async {
-    await tester.pumpWidget(buildSubject([7, 8, 8, 7, 7, 8])); // 泽雷随（第 17 卦），无变爻
+    await tester.pumpWidget(
+      buildSubject([7, 8, 8, 7, 7, 8]),
+    ); // 泽雷随（第 17 卦），无变爻
     await tester.pumpAndSettle();
 
     await submit(tester, '问跟随取舍');

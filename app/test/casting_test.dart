@@ -34,14 +34,7 @@ void main() {
   group('六爻起卦', () {
     test('六爻自下而上生成', () {
       // 初爻 2+2+2=6（老阴），其余五爻 3+3+3=9（老阳）
-      final coins = <int>[
-        2, 2, 2,
-        3, 3, 3,
-        3, 3, 3,
-        3, 3, 3,
-        3, 3, 3,
-        3, 3, 3,
-      ];
+      final coins = <int>[2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3];
       final lines = CastingEngine.castLines(SequenceCoins(coins));
       expect(lines, [6, 9, 9, 9, 9, 9]);
     });

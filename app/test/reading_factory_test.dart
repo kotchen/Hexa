@@ -5,8 +5,10 @@ import 'package:yi_app/src/reading/reading_factory.dart';
 
 import 'helpers/sequence_coins.dart';
 
-ReadingFactory factoryFor(List<int> lines) =>
-    ReadingFactory(coins: SequenceCoins(coinsFor(lines)), clock: () => DateTime(2026, 9, 28));
+ReadingFactory factoryFor(List<int> lines) => ReadingFactory(
+  coins: SequenceCoins(coinsFor(lines)),
+  clock: () => DateTime(2026, 9, 28),
+);
 
 void main() {
   group('真实起卦生成完整卦例（独立典型用例）', () {
@@ -74,7 +76,10 @@ void main() {
       expect(r.selectedTexts, hasLength(2));
       expect(r.primaryLabel, '乾为天 · 九五');
       expect(r.selectedTexts.map((t) => t.label), ['乾为天 · 初九', '乾为天 · 九五']);
-      expect(r.selectedTexts.firstWhere((t) => t.label.endsWith('九五')).isPrimary, isTrue);
+      expect(
+        r.selectedTexts.firstWhere((t) => t.label.endsWith('九五')).isPrimary,
+        isTrue,
+      );
     });
 
     test('三爻变：并读两卦卦辞，不判主次，明确标注简化', () {

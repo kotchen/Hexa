@@ -77,11 +77,14 @@ class ReadingRules {
       return '$guaName · ${HexagramMap.positionName(position, yang: yang)}';
     }
 
-    Selection yaoSelection(List<int> positions, List<int> guaLines,
-        String guaName, bool higherPrimary) {
+    Selection yaoSelection(
+      List<int> positions,
+      List<int> guaLines,
+      String guaName,
+      bool higherPrimary,
+    ) {
       final sorted = [...positions]..sort();
-      final primaryPos =
-          higherPrimary ? sorted.last : sorted.first;
+      final primaryPos = higherPrimary ? sorted.last : sorted.first;
       return Selection(
         kind: SelectionKind.yaoCi,
         isSimplified: false,
@@ -132,18 +135,14 @@ class ReadingRules {
           return Selection(
             kind: SelectionKind.yong9,
             isSimplified: false,
-            entries: [
-              SelectionEntry(label: '$benName · 用九', isPrimary: true),
-            ],
+            entries: [SelectionEntry(label: '$benName · 用九', isPrimary: true)],
           );
         }
         if (benName == '坤为地') {
           return Selection(
             kind: SelectionKind.yong6,
             isSimplified: false,
-            entries: [
-              SelectionEntry(label: '$benName · 用六', isPrimary: true),
-            ],
+            entries: [SelectionEntry(label: '$benName · 用六', isPrimary: true)],
           );
         }
         return Selection(

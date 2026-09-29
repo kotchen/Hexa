@@ -1,13 +1,25 @@
 import 'package:flutter/material.dart';
 
+import '../history/history_controller.dart';
 import '../reading/reading.dart';
 import 'paper_background.dart';
 
 /// 卦例结果页：本卦概览与重点原文分区展示，附来源与取辞依据。
+///
+/// - [history] 非空（本次起卦的新结果）：显示自动保存状态，
+///   失败时明示「尚未保存」并可幂等重试。
+/// - [onDelete] 非空（历史回看）：显示删除入口，确认后回调删除。
 class ResultPage extends StatelessWidget {
-  const ResultPage({super.key, required this.reading});
+  const ResultPage({
+    super.key,
+    required this.reading,
+    this.history,
+    this.onDelete,
+  });
 
   final Reading reading;
+  final HistoryController? history;
+  final Future<void> Function()? onDelete;
 
   @override
   Widget build(BuildContext context) {
@@ -34,6 +46,8 @@ class ResultPage extends StatelessWidget {
                   textAlign: TextAlign.center,
                   style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
                 ),
+                if (history != null)
+                  _SaveStateBanner(history: history!, reading: reading),
                 const SizedBox(height: 24),
                 _Section(
                   title: '卦象',
@@ -112,9 +126,21 @@ class ResultPage extends StatelessWidget {
                 ),
                 const SizedBox(height: 24),
                 Center(
-                  child: TextButton(
-                    onPressed: () => Navigator.of(context).pop(),
-                    child: const Text('返回，再次起卦'),
+                  child: Column(
+                    children: [
+                      TextButton(
+                        onPressed: () => Navigator.of(context).pop(),
+                        child: Text(history != null ? '返回，再次起卦' : '返回'),
+                      ),
+                      if (onDelete != null)
+                        TextButton(
+                          onPressed: () => _confirmDelete(context),
+                          child: const Text(
+                            '删除此记录',
+                            style: TextStyle(color: vermilion),
+                          ),
+                        ),
+                    ],
                   ),
                 ),
               ],
@@ -128,7 +154,77 @@ class ResultPage extends StatelessWidget {
   String _formatTime(DateTime t) =>
       '${t.year}-${_two(t.month)}-${_two(t.day)} ${_two(t.hour)}:${_two(t.minute)}';
 
+  Future<void> _confirmDelete(BuildContext context) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: const Text('删除这条历史卦例？'),
+        content: const Text('删除后不可恢复。此操作只影响本机记录。'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(false),
+            child: const Text('取消'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(true),
+            child: const Text('确认删除'),
+          ),
+        ],
+      ),
+    );
+    if (confirmed == true && context.mounted) {
+      await onDelete!();
+      if (context.mounted) Navigator.of(context).pop();
+    }
+  }
+
   String _two(int v) => v.toString().padLeft(2, '0');
+}
+
+class _SaveStateBanner extends StatelessWidget {
+  const _SaveStateBanner({required this.history, required this.reading});
+
+  final HistoryController history;
+  final Reading reading;
+
+  @override
+  Widget build(BuildContext context) {
+    const vermilion = Color(0xFFB3392E);
+    return ListenableBuilder(
+      listenable: history,
+      builder: (context, _) {
+        switch (history.statusOf(reading.id)) {
+          case SaveStatus.saving:
+            return Text(
+              '正在保存到本机历史…',
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
+            );
+          case SaveStatus.saved:
+            return Text(
+              '已保存到本机历史',
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
+            );
+          case SaveStatus.failed:
+            return Column(
+              children: [
+                const Text(
+                  '尚未保存到本机历史（本次结果已保留，可重试保存）',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 13, color: vermilion),
+                ),
+                TextButton(
+                  onPressed: () async =>
+                      history.save(reading), // 幂等：不重复记录、不重新起卦
+                  child: const Text('重试保存'),
+                ),
+              ],
+            );
+        }
+      },
+    );
+  }
 }
 
 class _SelectedTextBlock extends StatelessWidget {

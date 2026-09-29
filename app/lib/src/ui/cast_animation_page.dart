@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../history/history_controller.dart';
 import '../reading/reading.dart';
 import 'ink_reveal_timeline.dart';
 import 'paper_background.dart';
@@ -7,9 +8,12 @@ import 'result_page.dart';
 
 /// 约三秒的水墨起卦动画；跳过与播完进入同一个结果页，卦例不变。
 class CastAnimationPage extends StatefulWidget {
-  const CastAnimationPage({super.key, required this.reading});
+  const CastAnimationPage({super.key, required this.reading, this.history});
 
   final Reading reading;
+
+  /// 传入则结果页显示保存状态并支持失败重试。
+  final HistoryController? history;
 
   @override
   State<CastAnimationPage> createState() => _CastAnimationPageState();
@@ -51,7 +55,8 @@ class _CastAnimationPageState extends State<CastAnimationPage>
     if (!mounted) return;
     Navigator.of(context).pushReplacement(
       MaterialPageRoute<void>(
-        builder: (_) => ResultPage(reading: widget.reading),
+        builder: (_) =>
+            ResultPage(reading: widget.reading, history: widget.history),
       ),
     );
   }

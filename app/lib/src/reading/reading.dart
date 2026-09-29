@@ -1,6 +1,7 @@
 /// 一次卦例阅读的结果（由真实起卦生成）。
 class Reading {
   const Reading({
+    required this.id,
     required this.question,
     required this.castAt,
     required this.lines,
@@ -20,6 +21,9 @@ class Reading {
     this.bianGuaNumber,
     this.bianGuaCi,
   });
+
+  /// 唯一标识：起卦时生成，历史保存与重试幂等以此去重。
+  final String id;
 
   final String question;
   final DateTime castAt;

@@ -25,7 +25,8 @@ void main() {
         expect(benName, isNotEmpty);
         expect(bianName, isNotEmpty);
         for (var i = 0; i < 6; i++) {
-          final differs = (lines[i] == 7 || lines[i] == 9) !=
+          final differs =
+              (lines[i] == 7 || lines[i] == 9) !=
               (bianLines[i] == 7 || bianLines[i] == 9);
           expect(differs, changing.contains(i + 1), reason: 'lines=$lines');
         }
@@ -46,8 +47,10 @@ void main() {
           case 3:
             expect(selection.kind, SelectionKind.bothGuaCiSimplified);
             expect(selection.entries, hasLength(2));
-            expect(selection.entries.map((e) => e.label),
-                ['$benName · 卦辞', '$bianName · 卦辞']);
+            expect(selection.entries.map((e) => e.label), [
+              '$benName · 卦辞',
+              '$bianName · 卦辞',
+            ]);
             expect(selection.primary, isNull);
           case 4 || 5:
             expect(selection.kind, SelectionKind.yaoCi);

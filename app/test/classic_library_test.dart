@@ -6,27 +6,89 @@ void main() {
   group('内容库完整性', () {
     test('六十四卦：卦序 1–64、全名唯一、与 HexagramMap 映射一致', () {
       expect(ClassicLibrary.all, hasLength(64));
-      expect(ClassicLibrary.all.map((g) => g.number), equals(List.generate(64, (i) => i + 1)));
+      expect(
+        ClassicLibrary.all.map((g) => g.number),
+        equals(List.generate(64, (i) => i + 1)),
+      );
       expect(ClassicLibrary.all.map((g) => g.name).toSet(), hasLength(64));
 
       // 独立卦象表（通行本卦序 → 六爻阴阳，自下而上；1=阳 0=阴）
       const patterns = [
-        '111111', '000000', '100010', '010001', '111010', '010111',
-        '010000', '000010', '111011', '110111', '111000', '000111',
-        '101111', '111101', '001000', '000100', '100110', '011001',
-        '110000', '000011', '100101', '101001', '000001', '100000',
-        '100111', '111001', '100001', '011110', '010010', '101101',
-        '001110', '011100', '001111', '111100', '000101', '101000',
-        '101011', '110101', '001010', '010100', '110001', '100011',
-        '111110', '011111', '000110', '011000', '010110', '011010',
-        '101110', '011101', '100100', '001001', '001011', '110100',
-        '101100', '001101', '011011', '110110', '010011', '110010',
-        '110011', '001100', '101010', '010101',
+        '111111',
+        '000000',
+        '100010',
+        '010001',
+        '111010',
+        '010111',
+        '010000',
+        '000010',
+        '111011',
+        '110111',
+        '111000',
+        '000111',
+        '101111',
+        '111101',
+        '001000',
+        '000100',
+        '100110',
+        '011001',
+        '110000',
+        '000011',
+        '100101',
+        '101001',
+        '000001',
+        '100000',
+        '100111',
+        '111001',
+        '100001',
+        '011110',
+        '010010',
+        '101101',
+        '001110',
+        '011100',
+        '001111',
+        '111100',
+        '000101',
+        '101000',
+        '101011',
+        '110101',
+        '001010',
+        '010100',
+        '110001',
+        '100011',
+        '111110',
+        '011111',
+        '000110',
+        '011000',
+        '010110',
+        '011010',
+        '101110',
+        '011101',
+        '100100',
+        '001001',
+        '001011',
+        '110100',
+        '101100',
+        '001101',
+        '011011',
+        '110110',
+        '010011',
+        '110010',
+        '110011',
+        '001100',
+        '101010',
+        '010101',
       ];
       for (var i = 0; i < 64; i++) {
-        final lines = patterns[i].split('').map((c) => c == '1' ? 7 : 8).toList();
-        expect(HexagramMap.nameFor(lines), ClassicLibrary.all[i].name,
-            reason: '第 ${i + 1} 卦映射不符');
+        final lines = patterns[i]
+            .split('')
+            .map((c) => c == '1' ? 7 : 8)
+            .toList();
+        expect(
+          HexagramMap.nameFor(lines),
+          ClassicLibrary.all[i].name,
+          reason: '第 ${i + 1} 卦映射不符',
+        );
       }
     });
 
@@ -38,8 +100,14 @@ void main() {
           expect(y, isNotEmpty, reason: g.name);
         }
       }
-      expect(ClassicLibrary.all.where((g) => g.yong9 != null).map((g) => g.name), ['乾为天']);
-      expect(ClassicLibrary.all.where((g) => g.yong6 != null).map((g) => g.name), ['坤为地']);
+      expect(
+        ClassicLibrary.all.where((g) => g.yong9 != null).map((g) => g.name),
+        ['乾为天'],
+      );
+      expect(
+        ClassicLibrary.all.where((g) => g.yong6 != null).map((g) => g.name),
+        ['坤为地'],
+      );
     });
 
     test('用九用六内容正确', () {
@@ -81,8 +149,16 @@ void main() {
         expect(g.yaoCiVernacular, hasLength(6), reason: g.name);
         expect(g.yaoCiAction, hasLength(6), reason: g.name);
         for (var i = 0; i < 6; i++) {
-          expect(g.yaoCiVernacular![i], isNotNull, reason: '${g.name} 第 ${i + 1} 爻白话');
-          expect(g.yaoCiAction![i], isNotNull, reason: '${g.name} 第 ${i + 1} 爻行动参考');
+          expect(
+            g.yaoCiVernacular![i],
+            isNotNull,
+            reason: '${g.name} 第 ${i + 1} 爻白话',
+          );
+          expect(
+            g.yaoCiAction![i],
+            isNotNull,
+            reason: '${g.name} 第 ${i + 1} 爻行动参考',
+          );
         }
       }
 

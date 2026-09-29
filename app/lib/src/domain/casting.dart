@@ -26,8 +26,8 @@ class CastingEngine {
 
   /// 变爻阴阳翻转：6→7（老阴变少阳），9→8（老阳变少阴），不变爻原样。
   static int flipped(int line) => switch (line) {
-        laoYin => shaoYang,
-        laoYang => shaoYin,
-        _ => line,
-      };
+    laoYin => shaoYang,
+    laoYang => shaoYin,
+    _ => line,
+  };
 }

@@ -9,12 +9,14 @@ import 'helpers/sequence_coins.dart';
 /// 白话解释与一般行动参考完整覆盖验证。
 void main() {
   ReadingFactory factoryFor(List<int> lines) => ReadingFactory(
-      coins: SequenceCoins(coinsFor(lines)),
-      clock: () => DateTime(2026, 9, 28));
+    coins: SequenceCoins(coinsFor(lines)),
+    clock: () => DateTime(2026, 9, 28),
+  );
 
   /// 从条目标签解析卦名并取卦序，如「乾为天 · 初九」→ 1。
   int guaNumberOf(SelectedText t) =>
-      ClassicLibrary.forName(t.label.substring(0, t.label.indexOf(' · '))).number;
+      ClassicLibrary.forName(t.label.substring(0, t.label.indexOf(' · ')))
+          .number;
 
   const actionBoundary = '以上为应用提供的一般性行动参考，并非对未来的确定预测。';
 
@@ -27,12 +29,36 @@ void main() {
         expect(g.yaoCiVernacular, hasLength(6), reason: g.name);
         expect(g.yaoCiAction, hasLength(6), reason: g.name);
         for (var i = 0; i < 6; i++) {
-          expect(g.yaoCiVernacular![i], isNotNull, reason: '${g.name} 第 ${i + 1} 爻白话');
-          expect(g.yaoCiAction![i], isNotNull, reason: '${g.name} 第 ${i + 1} 爻行动参考');
-          expect(g.yaoCiVernacular![i]!.length, greaterThan(30), reason: '${g.name} 第 ${i + 1} 爻白话过短');
-          expect(g.yaoCiAction![i]!.length, greaterThan(30), reason: '${g.name} 第 ${i + 1} 爻行动参考过短');
-          expect(g.yaoCiAction![i], contains('一般性行动参考'), reason: '${g.name} 第 ${i + 1} 爻缺边界');
-          expect(g.yaoCiAction![i], contains('确定预测'), reason: '${g.name} 第 ${i + 1} 爻缺边界');
+          expect(
+            g.yaoCiVernacular![i],
+            isNotNull,
+            reason: '${g.name} 第 ${i + 1} 爻白话',
+          );
+          expect(
+            g.yaoCiAction![i],
+            isNotNull,
+            reason: '${g.name} 第 ${i + 1} 爻行动参考',
+          );
+          expect(
+            g.yaoCiVernacular![i]!.length,
+            greaterThan(30),
+            reason: '${g.name} 第 ${i + 1} 爻白话过短',
+          );
+          expect(
+            g.yaoCiAction![i]!.length,
+            greaterThan(30),
+            reason: '${g.name} 第 ${i + 1} 爻行动参考过短',
+          );
+          expect(
+            g.yaoCiAction![i],
+            contains('一般性行动参考'),
+            reason: '${g.name} 第 ${i + 1} 爻缺边界',
+          );
+          expect(
+            g.yaoCiAction![i],
+            contains('确定预测'),
+            reason: '${g.name} 第 ${i + 1} 爻缺边界',
+          );
         }
       }
     });
@@ -60,14 +86,22 @@ void main() {
       for (var n = 1; n <= 16; n++) {
         final g = ClassicLibrary.forNumber(n);
         // 边界表述完整（行动参考统一以边界句收尾）。
-        expect(g.guaCiAction!.endsWith(actionBoundary), isTrue, reason: '${g.name} 卦辞');
+        expect(
+          g.guaCiAction!.endsWith(actionBoundary),
+          isTrue,
+          reason: '${g.name} 卦辞',
+        );
         for (var i = 0; i < 6; i++) {
-          expect(g.yaoCiAction![i]!.endsWith(actionBoundary), isTrue,
-              reason: '${g.name} 第 ${i + 1} 爻');
+          expect(
+            g.yaoCiAction![i]!.endsWith(actionBoundary),
+            isTrue,
+            reason: '${g.name} 第 ${i + 1} 爻',
+          );
           // 白话解释须能从原文逐字摘出关键字（逐条关联原文，非通用文案）。
           final stripped = g.yaoCi[i].replaceAll(RegExp('[，。；：？]'), '');
-          final key =
-              stripped.length >= 4 ? stripped.substring(0, 4) : stripped;
+          final key = stripped.length >= 4
+              ? stripped.substring(0, 4)
+              : stripped;
           final grams = [
             for (var j = 0; j + 2 <= key.length; j++) key.substring(j, j + 2),
           ];
@@ -144,7 +178,10 @@ void main() {
           final coin = (mask >> (i * 2)) & 3;
           return const [6, 7, 8, 9][coin];
         });
-        final changing = [for (var i = 0; i < 6; i++) if (lines[i] == 6 || lines[i] == 9) i + 1];
+        final changing = [
+          for (var i = 0; i < 6; i++)
+            if (lines[i] == 6 || lines[i] == 9) i + 1,
+        ];
         if (changing.length != 5) continue;
         final r = factoryFor(lines).cast('跨卦验证');
         if (r.bianGuaNumber != null && r.bianGuaNumber! <= 16) {
