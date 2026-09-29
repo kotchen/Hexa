@@ -1,3 +1,3 @@
-dist/
+dist/*
 # 安装/使用说明随 dist 交付，纳入版本管理
 !dist/README.md
