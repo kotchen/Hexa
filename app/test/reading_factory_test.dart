@@ -115,11 +115,12 @@ void main() {
       expect(r.selectedTexts.single.original, '否之匪人，不利君子贞，大往小来。');
     });
 
-    test('缺少白话解释的条目 vernacular 为 null，不冒充完整解读', () {
+    test('第 49 卦（泽火革）条目解读已补齐，呈现白话与行动参考', () {
       final r = factoryFor([7, 8, 7, 7, 7, 8]).cast('问变革时机'); // 泽火革（第 49 卦），无变爻
       expect(r.benGuaName, '泽火革');
-      expect(r.selectedTexts.single.vernacular, isNull);
-      expect(r.selectedTexts.single.actionReference, isNull);
+      expect(r.selectedTexts.single.vernacular, isNotNull); // 任务 06 补齐
+      expect(r.selectedTexts.single.actionReference, isNotNull);
+      expect(r.selectedTexts.single.actionReference, contains('确定预测'));
     });
 
     test('卦例带问题、时间、来源、版本与取辞依据', () {

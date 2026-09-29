@@ -97,11 +97,11 @@ void main() {
 
   group('业务入口：4096 穷举验证 33–48 卦选中条目的解读覆盖', () {
     test('凡引用第 33–48 卦的选中经文均有白话与行动参考，覆盖本卦与变卦引用；'
-        '第 49 卦以后仍为 null（姤卦辞任务 01 已批准样例除外）', () {
+        '第 49–64 卦选中经文同样无缺项（全 64 卦已完成覆盖）', () {
       var coveredPrimary = 0; // 命中 33–48 卦的条目数（证明穷举确实覆盖）
       var coveredBen = 0; // 本卦引用命中
       var coveredBian = 0; // 变卦引用命中（跨本卦与变卦）
-      var unfinishedAfter48 = 0; // 49 卦以后保持未完成
+      var coveredRest = 0; // 其余范围（1–32、49–64 卦）命中
       for (var mask = 0; mask < 4096; mask++) {
         final lines = List.generate(6, (i) {
           final coin = (mask >> (i * 2)) & 3;
@@ -117,28 +117,21 @@ void main() {
             coveredPrimary++;
             if (n == ben) coveredBen++;
             if (n == bian) coveredBian++;
-            expect(t.vernacular, isNotNull, reason: t.label);
-            expect(t.actionReference, isNotNull, reason: t.label);
-            expect(t.actionReference, contains('一般性行动参考'), reason: t.label);
-            expect(t.actionReference, contains('确定预测'), reason: t.label);
-          } else if (n > 48) {
-            unfinishedAfter48++;
-            if (t.label == '天风姤 · 卦辞') {
-              // 任务 01 已批准的姤卦辞样例解读，属经批准的既有例外。
-              expect(t.vernacular, isNotNull, reason: t.label);
-              expect(t.actionReference, isNotNull, reason: t.label);
-            } else {
-              expect(t.vernacular, isNull, reason: '$t.label 不得误标为完成');
-              expect(t.actionReference, isNull, reason: '$t.label 不得误标为完成');
-            }
+          } else {
+            coveredRest++;
           }
+          // 全 64 卦已补齐：任何范围的选中条目都必须呈现白话与行动参考。
+          expect(t.vernacular, isNotNull, reason: t.label);
+          expect(t.actionReference, isNotNull, reason: t.label);
+          expect(t.actionReference, contains('一般性行动参考'), reason: t.label);
+          expect(t.actionReference, contains('确定预测'), reason: t.label);
         }
       }
-      // 穷举必须真正命中两条覆盖范围与未完成范围。
+      // 穷举必须真正命中本任务范围与其余范围。
       expect(coveredPrimary, greaterThan(0));
       expect(coveredBen, greaterThan(0));
       expect(coveredBian, greaterThan(0));
-      expect(unfinishedAfter48, greaterThan(0));
+      expect(coveredRest, greaterThan(0));
     });
 
     test('五变路径：师之遁取遁初六（变卦引用，遁第 33 卦）呈现完整解读', () {
@@ -154,7 +147,7 @@ void main() {
       expect(t.actionReference, contains('确定预测'));
     });
 
-    test('五变路径：损之革取革初九，革为第 49 卦仍显示未完成（跨卦边界）', () {
+    test('五变路径：损之革取革初九（变卦引用，革第 49 卦）呈现完整解读（跨卦边界）', () {
       final r = factoryFor([7, 9, 6, 6, 6, 9]).cast('问变动');
       expect(r.changingPositions, [2, 3, 4, 5, 6]);
       expect(r.benGuaName, '山泽损');
@@ -162,9 +155,10 @@ void main() {
       final t = r.selectedTexts.single;
       expect(t.label, '泽火革 · 初九');
       expect(t.original, '初九：巩用黄牛之革。');
-      // 革在第 49 卦：不得冒充完成。
-      expect(t.vernacular, isNull);
-      expect(t.actionReference, isNull);
+      // 革在第 49 卦，任务 06 已补齐：不得再显示未完成。
+      expect(t.vernacular, isNotNull);
+      expect(t.actionReference, isNotNull);
+      expect(t.actionReference, contains('确定预测'));
     });
 
     test('五变路径取到变卦中第 33–48 卦爻辞时呈现完整解读（跨卦引用无缺项）', () {

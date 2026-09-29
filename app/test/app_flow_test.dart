@@ -81,7 +81,7 @@ void main() {
     expect(find.textContaining('初九'), findsWidgets);
   });
 
-  testWidgets('缺少白话解释的经文明确显示解读尚未完成', (tester) async {
+  testWidgets('第 49–64 卦已完成条目显示白话解释与行动参考，不再有解读尚未完成', (tester) async {
     await tester.pumpWidget(buildSubject([7, 8, 7, 7, 7, 8])); // 泽火革（第 49 卦），无变爻
     await tester.pumpAndSettle();
 
@@ -90,7 +90,10 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.textContaining('泽火革'), findsWidgets);
-    expect(find.textContaining('解读尚未完成'), findsWidgets);
+    expect(find.textContaining('白话解释（应用编写）'), findsOneWidget);
+    expect(find.textContaining('行动参考（应用编写，非原文）'), findsOneWidget);
+    expect(find.textContaining('解读尚未完成'), findsNothing);
+    expect(find.textContaining('并非对未来的确定预测'), findsOneWidget);
   });
 
   testWidgets('第 33–48 卦已完成条目显示白话解释与行动参考', (tester) async {

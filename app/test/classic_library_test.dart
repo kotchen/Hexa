@@ -47,11 +47,12 @@ void main() {
       expect(ClassicLibrary.forName('坤为地').yong6, '利永贞。');
     });
 
-    test('第 1–48 卦解读已提供，第 49 卦以后缺省为 null（解读尚未完成）', () {
+    test('全部 64 卦解读已提供，不再有缺省 null（解读尚未完成）状态', () {
       final qian = ClassicLibrary.forName('乾为天');
       expect(qian.guaCiVernacular, isNotNull);
       expect(qian.yaoCiVernacular, isNotNull);
       expect(qian.yong9Vernacular, isNotNull);
+      expect(qian.yong9Action, isNotNull);
 
       final gou = ClassicLibrary.forName('天风姤');
       expect(gou.guaCiVernacular, isNotNull); // 任务 01 已批准样例
@@ -62,7 +63,7 @@ void main() {
       expect(sui.yaoCiVernacular, isNotNull);
       expect(sui.yaoCiAction, isNotNull);
 
-      final dun = ClassicLibrary.forNumber(33); // 遁，任务 05 补齐
+      final dun = ClassicLibrary.forNumber(33); // 遁，任务 04 补齐
       expect(dun.guaCiVernacular, isNotNull);
       expect(dun.guaCiAction, isNotNull);
       expect(dun.yaoCiVernacular, isNotNull);
@@ -72,14 +73,22 @@ void main() {
       expect(jing.guaCiVernacular, isNotNull);
       expect(jing.yaoCiVernacular, isNotNull);
 
-      final ge = ClassicLibrary.forNumber(49); // 革
-      expect(ge.guaCiVernacular, isNull);
-      expect(ge.guaCiAction, isNull);
-      expect(ge.yaoCiVernacular, isNull);
-      expect(ge.yaoCiAction, isNull);
+      // 任务 06：第 49–64 卦（革至未济）全部补齐。
+      for (var n = 49; n <= 64; n++) {
+        final g = ClassicLibrary.forNumber(n);
+        expect(g.guaCiVernacular, isNotNull, reason: '${g.name} 卦辞白话');
+        expect(g.guaCiAction, isNotNull, reason: '${g.name} 卦辞行动参考');
+        expect(g.yaoCiVernacular, hasLength(6), reason: g.name);
+        expect(g.yaoCiAction, hasLength(6), reason: g.name);
+        for (var i = 0; i < 6; i++) {
+          expect(g.yaoCiVernacular![i], isNotNull, reason: '${g.name} 第 ${i + 1} 爻白话');
+          expect(g.yaoCiAction![i], isNotNull, reason: '${g.name} 第 ${i + 1} 爻行动参考');
+        }
+      }
 
-      final ding = ClassicLibrary.forNumber(50); // 鼎
-      expect(ding.guaCiVernacular, isNull);
+      final wei = ClassicLibrary.forNumber(64); // 未济
+      expect(wei.guaCiVernacular, isNotNull);
+      expect(wei.yaoCiVernacular, isNotNull);
     });
 
     test('内容库提供出处与版本号', () {
