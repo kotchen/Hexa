@@ -282,7 +282,9 @@ class _SelectedTextBlock extends StatelessWidget {
                   ],
                 )
               : const Text(
-                  '解读尚未完成（白话解释将在内容任务补齐，此处不以通用文案冒充解读）',
+                  // 当前内容库全部条目均有解读；此分支只可能来自
+                  // 内容补齐前保存的历史快照（旧记录保持当时原样）。
+                  '本记录保存于解读补齐前的早期内容版本，当时该条目未附白话解释。',
                   style: TextStyle(fontSize: 13, color: vermilion),
                 ),
         ),

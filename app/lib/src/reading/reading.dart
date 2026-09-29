@@ -84,7 +84,8 @@ class SelectedText {
   /// 是否主读条目。
   final bool isPrimary;
 
-  /// 应用原创白话解释；null = 解读尚未完成，界面须明示。
+  /// 应用原创白话解释；当前内容库全部条目均已提供。
+  /// null 只可能来自解读补齐前保存的历史快照，界面如实说明。
   final String? vernacular;
 
   /// 应用编写的一般行动参考；null = 尚未编写。

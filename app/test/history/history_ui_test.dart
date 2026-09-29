@@ -144,6 +144,29 @@ void main() {
     expect(find.textContaining('内容版本：classic-v1.0'), findsOneWidget);
   });
 
+  testWidgets('解读补齐前的旧快照如实说明，不再出现「解读尚未完成」开发期提示', (tester) async {
+    final store = InMemoryReadingStore();
+    // 解读字段为 null 的旧快照（内容补齐前保存的记录）。
+    await store.save(sampleReading(id: 'old-null', vernacular: null));
+    final history = HistoryController(store);
+    await history.load();
+
+    await tester.pumpWidget(buildSubject([9, 7, 7, 7, 7, 7], history: history));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('历史'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('明天是否适合启动新项目'));
+    await tester.pumpAndSettle();
+
+    expect(find.textContaining('解读尚未完成'), findsNothing);
+    // 该样例两条选中经文均无白话快照，提示各出现一次。
+    expect(
+      find.textContaining('本记录保存于解读补齐前的早期内容版本'),
+      findsWidgets,
+    );
+  });
+
   testWidgets('删除需确认：取消保留记录，确认后删除', (tester) async {
     final store = InMemoryReadingStore();
     await store.save(sampleReading(id: 'r-1', vernacular: null));
