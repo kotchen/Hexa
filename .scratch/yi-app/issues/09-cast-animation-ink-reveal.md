@@ -10,14 +10,14 @@ Parent: ../spec.md
 
 ## Acceptance criteria
 
-- [ ] 素材管线：`xuan-paper-texture.png` 压缩至约 2048px JPG（体积从 4MB 降至数百 KB），`ink-wash-blob.png` 保留白底 PNG，二者移入 `app/assets/images/`，pubspec 登记 `assets/images/` 目录；根目录原图不改动。
-- [ ] 共享纸感背景组件：首页、起卦页、结果页统一使用；结果页大段文字在纸纹上可读（手动验证）。
-- [ ] 起卦页：水墨底韵以 multiply 混合、约 10% 透明度叠于卦象后方。
-- [ ] 动画时序：AnimationController 驱动（替换 Timer）；六爻自下而上，每爻墨线从左到右生长约 250ms + 停顿约 150ms；每爻落定瞬间线条轻微回弹（视觉顿点）；变爻落定后 200ms 墨→朱渐变；末爻落定后停留约 300ms 进入结果页；全程约 3.1s。
-- [ ] 不加声音、不加触感。
-- [ ] 跳过：保留"跳过"按钮，点击画面任意处均可跳过；跳过与播完进入同一结果页，卦例不变；动画仅展示，不参与生成（spec 用户故事 6/7/20 保持）。
-- [ ] 测试不依赖真实等待：时钟/进度可注入，新增用例覆盖生长时序、变爻变色、跳过同结果；`flutter test` 与 `flutter analyze` 全绿。
-- [ ] 手动验证三秒时长、release 构建中素材正确打包、重复点击不重复起卦。
+- [x] 素材管线：`xuan-paper-texture.png` 压缩至约 2048px JPG（体积从 4MB 降至数百 KB），`ink-wash-blob.png` 保留白底 PNG，二者移入 `app/assets/images/`，pubspec 登记 `assets/images/` 目录；根目录原图不改动。
+- [x] 共享纸感背景组件：首页、起卦页、结果页统一使用；结果页大段文字在纸纹上可读（手动验证）。
+- [x] 起卦页：水墨底韵以 multiply 混合、约 10% 透明度叠于卦象后方。
+- [x] 动画时序：AnimationController 驱动（替换 Timer）；六爻自下而上，每爻墨线从左到右生长约 250ms + 停顿约 150ms；每爻落定瞬间线条轻微回弹（视觉顿点）；变爻落定后 200ms 墨→朱渐变；末爻落定后停留约 300ms 进入结果页；全程约 3.1s。
+- [x] 不加声音、不加触感。
+- [x] 跳过：保留"跳过"按钮，点击画面任意处均可跳过；跳过与播完进入同一结果页，卦例不变；动画仅展示，不参与生成（spec 用户故事 6/7/20 保持）。
+- [x] 测试不依赖真实等待：时钟/进度可注入，新增用例覆盖生长时序、变爻变色、跳过同结果；`flutter test` 与 `flutter analyze` 全绿。
+- [x] 手动验证三秒时长、release 构建中素材正确打包、重复点击不重复起卦。
 
 ## Context
 
@@ -51,7 +51,7 @@ Parent: ../spec.md
 
 issue 02 提交（bb1ea1f）后 rebase：`app_flow_test` 取新世界版本并迁入两个动画用例（播完同结果、空白点击跳过），home/result 取 main 新版重接 PaperBackground。rebase 后 58/58 测试通过，`--no-ff` 合入 main（7a1c1e4），主工作区复验 58/58 + analyze 无问题。worktree 与临时分支已清理。
 
-### 遗留
+### 遗留（2026-09-30 已闭环）
 
-- 纸纹可读性、三秒节奏与顿点手感需用户手动跑应用验收（`cd app && flutter run -d macos`，或 `flutter build macos --release` 后打开 .app）。
-- 根目录两张原图（xuan-paper-texture.png / ink-wash-blob.png）确认压缩效果满意后可删。
+- 纸纹可读性、三秒节奏与顿点手感：用户已手动跑应用验收通过（2026-09-30）。
+- 根目录两张原图（xuan-paper-texture.png / ink-wash-blob.png）：已删除。
